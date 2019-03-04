@@ -3,5 +3,5 @@ package weather.server.service;
 import weather.server.to.CityTO;
 
 public interface CityService {
-    public CityTO findCityById(Integer id);
+    public CityTO findCityById(Long id);
 }

@@ -16,7 +16,7 @@ public class CityControllerImpl implements CityController {
 
     @Override
     @GetMapping("/city/{id}")
-    public CityTO findCityById(@PathVariable Integer id) {
+    public CityTO findCityById(@PathVariable Long id) {
         return cityService.findCityById(id);
     }
 }

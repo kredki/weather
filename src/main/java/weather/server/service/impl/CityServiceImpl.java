@@ -19,8 +19,8 @@ public class CityServiceImpl implements CityService {
     private CityMapper cityMapper;
 
     @Override
-    public CityTO findCityById(Integer id) {
-        Optional<CityEntity> cityFromDB = cityRepository.findById(id.longValue());
+    public CityTO findCityById(Long id) {
+        Optional<CityEntity> cityFromDB = cityRepository.findById(id);
         if(cityFromDB.isPresent()) {
             return cityMapper.toTO(cityFromDB.get());
         }
