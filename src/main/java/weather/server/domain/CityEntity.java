@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class CityEntity {
 
     @Id
-    private Integer id;
+    private Long id;
 
     @Column(name = "NAME")
     private String name;
