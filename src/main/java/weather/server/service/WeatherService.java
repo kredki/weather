@@ -1,7 +1,8 @@
 package weather.server.service;
 
-import weather.server.to.WeatherTO;
+import net.aksingh.owmjapis.api.APIException;
+import weather.server.to.CurrentWeatherTO;
 
 public interface WeatherService {
-    public WeatherTO findCurrentWeatherByCityId(Long id);
+    public CurrentWeatherTO findCurrentWeatherByCityId(Long id) throws APIException;
 }

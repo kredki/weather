@@ -1,13 +1,34 @@
 package weather.server.service.impl;
 
+import net.aksingh.owmjapis.api.APIException;
+import net.aksingh.owmjapis.core.OWM;
+import net.aksingh.owmjapis.model.CurrentWeather;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import weather.server.dao.CityRepository;
+import weather.server.mapper.CurrentWeatherMapper;
 import weather.server.service.WeatherService;
-import weather.server.to.WeatherTO;
+import weather.server.to.CurrentWeatherTO;
 
 @Service
 public class WeatherServiceImpl implements WeatherService {
+    @Value("${api.key}")
+    private String apiKey;
+
+    @Autowired
+    private CurrentWeatherMapper currentWeatherMapper;
+
+    @Autowired
+    CityRepository cityRepository;
+
     @Override
-    public WeatherTO findCurrentWeatherByCityId(Long id) {
-        return null;
+    public CurrentWeatherTO findCurrentWeatherByCityId(Long id) throws APIException {
+        if(!cityRepository.findById(id).isPresent()) {
+            return null;
+        }
+        OWM owm = new OWM(apiKey);
+        CurrentWeather cwd = owm.currentWeatherByCityId(id.intValue());
+        return currentWeatherMapper.toTO(cwd);
     }
 }
