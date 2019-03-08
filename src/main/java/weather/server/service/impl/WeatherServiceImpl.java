@@ -29,6 +29,7 @@ public class WeatherServiceImpl implements WeatherService {
             return null;
         }
         OWM owm = new OWM(apiKey);
+        owm.setUnit(OWM.Unit.METRIC);
         CurrentWeather cwd = owm.currentWeatherByCityId(id.intValue());
         if (!cwd.hasRespCode() || !(cwd.getRespCode() == 200)) {
             throw new WeatherDataValidationException("Data has no response code or code is not 200");
