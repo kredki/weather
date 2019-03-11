@@ -16,8 +16,7 @@ import weather.server.to.CoordinatesTO;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CityServiceImplTest {
     @Mock
@@ -74,5 +73,21 @@ public class CityServiceImplTest {
         assertThat(result.getName()).isEqualTo(cityTO.getName());
         Mockito.verify(cityRepository, Mockito.times(1)).findById(id);
         Mockito.verify(cityMapper, Mockito.times(1)).toTO(cityEntity);
+    }
+
+    @Test
+    public void shouldNotFindCityById() {
+        // given
+        Long id = 1L;
+        Mockito.when(cityRepository.findById(id)).thenReturn(Optional.ofNullable(null));
+        Mockito.when(cityMapper.toTO(null)).thenReturn(null);
+
+        // when
+        CityTO result = cityService.findCityById(id);
+
+        // then
+        assertThat(result).isNull();
+        Mockito.verify(cityRepository, Mockito.times(1)).findById(id);
+        Mockito.verify(cityMapper, Mockito.never()).toTO(Mockito.any());
     }
 }
