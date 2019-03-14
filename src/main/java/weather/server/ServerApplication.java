@@ -28,7 +28,7 @@ public class ServerApplication implements ApplicationRunner {
 			logger.info("arg-" + name + "=" + args.getOptionValues(name));
 		}
 
-		boolean containsOption = args.containsOption("api.key");
-		logger.info("Contains api.key: " + containsOption);
+		boolean containsOption = args.containsOption("apikey");
+		logger.info("Contains apikey: " + containsOption);
 	}
 }

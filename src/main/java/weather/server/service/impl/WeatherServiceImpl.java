@@ -14,7 +14,7 @@ import weather.server.to.CurrentWeatherTO;
 
 @Service
 public class WeatherServiceImpl implements WeatherService {
-    @Value("${api.key}")
+    @Value("${apikey}")
     private String apiKey;
 
     @Autowired
@@ -35,5 +35,10 @@ public class WeatherServiceImpl implements WeatherService {
             throw new WeatherDataValidationException("Data has no response code or code is not 200");
         }
         return currentWeatherMapper.toTO(cwd);
+    }
+
+    // method for test purpose only
+    public void _testSetterForApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 }
