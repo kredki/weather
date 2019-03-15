@@ -56,4 +56,27 @@ public class WeatherServiceImplTest {
         assertThat(result).isEqualTo(cwdTO);
         Mockito.verify(owm, Mockito.times(1)).currentWeatherByCityId(id.intValue());
     }
+
+    @Test
+    public void shouldNotFindCurrentWeatherByCityId() throws APIException {
+        // given
+        Long id = 1L;
+        OWM owm = Mockito.mock(OWM.class);
+        CurrentWeatherTO cwdTO = new CurrentWeatherTO();
+        weatherService._testingPurposeOnlySetterForOWM(owm);
+
+        Mockito.when(cwd.hasRespCode()).thenReturn(true);
+        Mockito.when(cwd.getRespCode()).thenReturn(200);
+        Mockito.when(owm.currentWeatherByCityId(id.intValue())).thenReturn(cwd);
+        Mockito.when(currentWeatherMapper.toTO(cwd)).thenReturn(cwdTO);
+        Mockito.when(currentWeatherMapper.toTO(null)).thenReturn(null);
+        Mockito.when(cityRepository.findById(id)).thenReturn(Optional.ofNullable(null));
+
+        // when
+        CurrentWeatherTO result = weatherService.findCurrentWeatherByCityId(id);
+
+        // then
+        assertThat(result).isNull();
+        Mockito.verify(owm, Mockito.never()).currentWeatherByCityId(id.intValue());
+    }
 }
