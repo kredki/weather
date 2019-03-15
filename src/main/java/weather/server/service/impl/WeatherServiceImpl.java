@@ -12,6 +12,8 @@ import weather.server.mapper.CurrentWeatherMapper;
 import weather.server.service.WeatherService;
 import weather.server.to.CurrentWeatherTO;
 
+import javax.annotation.PostConstruct;
+
 @Service
 public class WeatherServiceImpl implements WeatherService {
     @Value("${apikey}")
@@ -21,15 +23,22 @@ public class WeatherServiceImpl implements WeatherService {
     private CurrentWeatherMapper currentWeatherMapper;
 
     @Autowired
-    CityRepository cityRepository;
+    private CityRepository cityRepository;
+
+    private OWM owm;
+
+    @PostConstruct
+    private void init() {
+        this.owm = new OWM(apiKey);
+        this.owm.setUnit(OWM.Unit.METRIC);
+    }
 
     @Override
     public CurrentWeatherTO findCurrentWeatherByCityId(Long id) throws APIException {
         if(!cityRepository.findById(id).isPresent()) {
             return null;
         }
-        OWM owm = new OWM(apiKey);
-        owm.setUnit(OWM.Unit.METRIC);
+
         CurrentWeather cwd = owm.currentWeatherByCityId(id.intValue());
         if (!cwd.hasRespCode() || !(cwd.getRespCode() == 200)) {
             throw new WeatherDataValidationException("Data has no response code or code is not 200");
@@ -38,7 +47,7 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     // method for test purpose only
-    public void _testSetterForApiKey(String apiKey) {
-        this.apiKey = apiKey;
+    public void _testingPurposeOnlySetterForOWM (OWM owm) {
+        this.owm = owm;
     }
 }
