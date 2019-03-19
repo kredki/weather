@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 import weather.server.dao.CityRepository;
 import weather.server.domain.CityEntity;
 import weather.server.domain.CoordinatesEmbeddedInTable;
+import weather.server.exception.CityNotFoundException;
 import weather.server.mapper.CityMapper;
 import weather.server.to.CityTO;
 import weather.server.to.CoordinatesTO;
@@ -79,14 +80,20 @@ public class CityServiceImplTest {
     public void shouldNotFindCityById() {
         // given
         Long id = 1L;
+        boolean exceptionCaught = false;
         Mockito.when(cityRepository.findById(id)).thenReturn(Optional.ofNullable(null));
         Mockito.when(cityMapper.toTO(null)).thenReturn(null);
 
         // when
-        CityTO result = cityService.findCityById(id);
+        CityTO result = null;
+        try {
+            result = cityService.findCityById(id);
+        } catch (CityNotFoundException e) {
+            exceptionCaught = true;
+        }
 
         // then
-        assertThat(result).isNull();
+        assertThat(exceptionCaught).isTrue();
         Mockito.verify(cityRepository, Mockito.times(1)).findById(id);
         Mockito.verify(cityMapper, Mockito.never()).toTO(Mockito.any());
     }
